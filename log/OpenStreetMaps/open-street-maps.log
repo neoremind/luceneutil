@@ -1,0 +1,215 @@
+IFD 0 [2021-04-27T11:32:25.884132Z; main]: init: current segments file is "segments"; deletionPolicy=org.apache.lucene.index.KeepOnlyLastCommitDeletionPolicy@39a054a5
+IFD 0 [2021-04-27T11:32:25.913419Z; main]: now checkpoint "" [0 segments ; isCommit = false]
+IFD 0 [2021-04-27T11:32:25.917063Z; main]: 11 msec to checkpoint
+IW 0 [2021-04-27T11:32:25.921675Z; main]: init: create=true reader=null
+IW 0 [2021-04-27T11:32:25.948255Z; main]: 
+dir=MMapDirectory@/disk1/lucene/bkdtest1d lockFactory=org.apache.lucene.store.NativeFSLockFactory@35bbe5e8
+index=
+version=9.0.0
+analyzer=org.apache.lucene.analysis.standard.StandardAnalyzer
+ramBufferSizeMB=256.0
+maxBufferedDocs=-1
+mergedSegmentWarmer=null
+delPolicy=org.apache.lucene.index.KeepOnlyLastCommitDeletionPolicy
+commit=null
+openMode=CREATE
+similarity=org.apache.lucene.search.similarities.BM25Similarity
+mergeScheduler=org.apache.lucene.index.SerialMergeScheduler@c39f790
+codec=Lucene90
+infoStream=org.apache.lucene.util.PrintStreamInfoStream
+mergePolicy=[LogDocMergePolicy: minMergeSize=1000, mergeFactor=10, maxMergeSize=9223372036854775807, maxMergeSizeForForcedMerge=9223372036854775807, calibrateSizeByDeletes=true, maxMergeDocs=2147483647, maxCFSSegmentSizeMB=8.796093022207999E12, noCFSRatio=0.1]
+readerPooling=true
+perThreadHardLimitMB=1945
+useCompoundFile=true
+commitOnClose=true
+indexSort=null
+checkPendingFlushOnUpdate=true
+softDeletesField=null
+maxFullFlushMergeWaitMillis=0
+leafSorter=null
+eventListener=org.apache.lucene.index.IndexWriterEventListener$1@483bf400
+writer=org.apache.lucene.index.IndexWriter@21a06946
+
+IW 0 [2021-04-27T11:32:25.948767Z; main]: MMapDirectory.UNMAP_SUPPORTED=true
+1000000...
+2000000...
+3000000...
+4000000...
+5000000...
+6000000...
+7000000...
+8000000...
+9000000...
+10000000...
+11000000...
+12000000...
+13000000...
+14000000...
+15000000...
+16000000...
+17000000...
+18000000...
+19000000...
+20000000...
+21000000...
+22000000...
+23000000...
+24000000...
+25000000...
+26000000...
+27000000...
+28000000...
+29000000...
+30000000...
+31000000...
+32000000...
+FP 0 [2021-04-27T11:32:47.228742Z; main]: trigger flush: activeBytes=276994680 deleteBytes=0 vs limit=268435456
+FP 0 [2021-04-27T11:32:47.231686Z; main]: thread state has 276994680 bytes; docInRAM=32585421
+FP 0 [2021-04-27T11:32:47.231987Z; main]: 1 in-use non-flushing threads states
+DWPT 0 [2021-04-27T11:32:47.235803Z; main]: flush postings as segment _0 numDocs=32585421
+IW 0 [2021-04-27T11:32:47.236840Z; main]: 0 msec to write norms
+IW 0 [2021-04-27T11:32:47.237285Z; main]: 0 msec to write docValues
+IW 0 [2021-04-27T11:33:04.278620Z; main]: 17040 msec to write points
+IW 0 [2021-04-27T11:33:04.278945Z; main]: 0 msec to write vectors
+IW 0 [2021-04-27T11:33:04.302400Z; main]: 23 msec to finish stored fields
+IW 0 [2021-04-27T11:33:04.304140Z; main]: 1 msec to write postings and finish vectors
+IW 0 [2021-04-27T11:33:04.304915Z; main]: 0 msec to write fieldInfos
+DWPT 0 [2021-04-27T11:33:04.311767Z; main]: new segment has 0 deleted docs
+DWPT 0 [2021-04-27T11:33:04.311969Z; main]: new segment has 0 soft-deleted docs
+DWPT 0 [2021-04-27T11:33:04.317540Z; main]: new segment has no vectors; no norms; no docValues; no prox; freqs
+DWPT 0 [2021-04-27T11:33:04.317825Z; main]: flushedFiles=[_0.kdm, _0.kdi, _0.fdm, _0.kdd, _0.fdx, _0.fdt, _0.fnm]
+DWPT 0 [2021-04-27T11:33:04.318019Z; main]: flushed codec=Lucene90
+DWPT 0 [2021-04-27T11:33:04.319622Z; main]: flushed: segment=_0 ramUsed=264.163 MB newFlushedSize=155.869 MB docs/MB=209,056.921
+IW 0 [2021-04-27T11:33:04.320726Z; main]: create compound file
+DWPT 0 [2021-04-27T11:33:04.518908Z; main]: flush time 17284.537739 msec
+IW 0 [2021-04-27T11:33:04.521124Z; main]: publishFlushedSegment seg-private updates=null
+IW 0 [2021-04-27T11:33:04.522283Z; main]: publishFlushedSegment _0(9.0.0):c32585421:[diagnostics={timestamp=1619523184320, java.version=11.0.11, java.vm.version=11.0.11+9-LTS, lucene.version=9.0.0, source=flush, os.arch=amd64, java.runtime.version=11.0.11+9-LTS, os.version=4.19.57-15.1.al7.x86_64, os=Linux, java.vendor=Red Hat, Inc.}]:[attributes={Lucene90StoredFieldsFormat.mode=BEST_SPEED}] :id=ew3fxhoeonyl9fsl3f5kl7vgj
+BD 0 [2021-04-27T11:33:04.524859Z; main]: finished packet delGen=1 now completedDelGen=1
+IW 0 [2021-04-27T11:33:04.527527Z; main]: publish sets newSegment delGen=1 seg=_0(9.0.0):c32585421:[diagnostics={timestamp=1619523184320, java.version=11.0.11, java.vm.version=11.0.11+9-LTS, lucene.version=9.0.0, source=flush, os.arch=amd64, java.runtime.version=11.0.11+9-LTS, os.version=4.19.57-15.1.al7.x86_64, os=Linux, java.vendor=Red Hat, Inc.}]:[attributes={Lucene90StoredFieldsFormat.mode=BEST_SPEED}] :id=ew3fxhoeonyl9fsl3f5kl7vgj
+IFD 0 [2021-04-27T11:33:04.527980Z; main]: now checkpoint "_0(9.0.0):c32585421:[diagnostics={timestamp=1619523184320, java.version=11.0.11, java.vm.version=11.0.11+9-LTS, lucene.version=9.0.0, source=flush, os.arch=amd64, java.runtime.version=11.0.11+9-LTS, os.version=4.19.57-15.1.al7.x86_64, os=Linux, java.vendor=Red Hat, Inc.}]:[attributes={Lucene90StoredFieldsFormat.mode=BEST_SPEED}] :id=ew3fxhoeonyl9fsl3f5kl7vgk" [1 segments ; isCommit = false]
+IFD 0 [2021-04-27T11:33:04.528363Z; main]: 0 msec to checkpoint
+IFD 0 [2021-04-27T11:33:04.528763Z; main]: will delete new file "_0.kdm"
+IFD 0 [2021-04-27T11:33:04.528857Z; main]: will delete new file "_0.kdi"
+IFD 0 [2021-04-27T11:33:04.528908Z; main]: will delete new file "_0.fdm"
+IFD 0 [2021-04-27T11:33:04.528952Z; main]: will delete new file "_0.kdd"
+IFD 0 [2021-04-27T11:33:04.528995Z; main]: will delete new file "_0.fdx"
+IFD 0 [2021-04-27T11:33:04.529038Z; main]: will delete new file "_0.fdt"
+IFD 0 [2021-04-27T11:33:04.529080Z; main]: will delete new file "_0.fnm"
+IFD 0 [2021-04-27T11:33:04.529250Z; main]: delete [_0.kdm, _0.kdi, _0.fdm, _0.kdd, _0.fdx, _0.fdt, _0.fnm]
+MP 0 [2021-04-27T11:33:04.555538Z; main]: findMerges: 1 segments
+MP 0 [2021-04-27T11:33:04.566341Z; main]: seg=_0(9.0.0):c32585421:[diagnostics={timestamp=1619523184320, java.version=11.0.11, java.vm.version=11.0.11+9-LTS, lucene.version=9.0.0, source=flush, os.arch=amd64, java.runtime.version=11.0.11+9-LTS, os.version=4.19.57-15.1.al7.x86_64, os=Linux, java.vendor=Red Hat, Inc.}]:[attributes={Lucene90StoredFieldsFormat.mode=BEST_SPEED}] :id=ew3fxhoeonyl9fsl3f5kl7vgk level=7.5130234 size=155.869 MB
+MP 0 [2021-04-27T11:33:04.570681Z; main]:   level 6.7630234 to 7.5130234: 1 segments
+33000000...
+34000000...
+35000000...
+36000000...
+37000000...
+38000000...
+39000000...
+40000000...
+41000000...
+42000000...
+43000000...
+44000000...
+45000000...
+46000000...
+47000000...
+48000000...
+49000000...
+50000000...
+51000000...
+52000000...
+53000000...
+54000000...
+55000000...
+56000000...
+57000000...
+58000000...
+59000000...
+60000000...
+IW 0 [2021-04-27T11:33:25.842475Z; main]: commit: start
+IW 0 [2021-04-27T11:33:25.842670Z; main]: commit: enter lock
+IW 0 [2021-04-27T11:33:25.842741Z; main]: commit: now prepare
+IW 0 [2021-04-27T11:33:25.842791Z; main]: prepareCommit: flush
+IW 0 [2021-04-27T11:33:25.843513Z; main]:   index before flush _0(9.0.0):c32585421:[diagnostics={timestamp=1619523184320, java.version=11.0.11, java.vm.version=11.0.11+9-LTS, lucene.version=9.0.0, source=flush, os.arch=amd64, java.runtime.version=11.0.11+9-LTS, os.version=4.19.57-15.1.al7.x86_64, os=Linux, java.vendor=Red Hat, Inc.}]:[attributes={Lucene90StoredFieldsFormat.mode=BEST_SPEED}] :id=ew3fxhoeonyl9fsl3f5kl7vgk
+DW 0 [2021-04-27T11:33:25.843654Z; main]: startFullFlush
+DW 0 [2021-04-27T11:33:25.847735Z; main]: anyChanges? numDocsInRam=28258983 deletes=false hasTickets:false pendingChangesInFullFlush: false
+DWPT 0 [2021-04-27T11:33:25.848957Z; main]: flush postings as segment _1 numDocs=28258983
+IW 0 [2021-04-27T11:33:25.849072Z; main]: 0 msec to write norms
+IW 0 [2021-04-27T11:33:25.849122Z; main]: 0 msec to write docValues
+IW 0 [2021-04-27T11:33:37.712933Z; main]: 11863 msec to write points
+IW 0 [2021-04-27T11:33:37.713096Z; main]: 0 msec to write vectors
+IW 0 [2021-04-27T11:33:37.718515Z; main]: 5 msec to finish stored fields
+IW 0 [2021-04-27T11:33:37.718669Z; main]: 0 msec to write postings and finish vectors
+IW 0 [2021-04-27T11:33:37.718878Z; main]: 0 msec to write fieldInfos
+DWPT 0 [2021-04-27T11:33:37.719089Z; main]: new segment has 0 deleted docs
+DWPT 0 [2021-04-27T11:33:37.719138Z; main]: new segment has 0 soft-deleted docs
+DWPT 0 [2021-04-27T11:33:37.719186Z; main]: new segment has no vectors; no norms; no docValues; no prox; freqs
+DWPT 0 [2021-04-27T11:33:37.719251Z; main]: flushedFiles=[_1.kdi, _1.fdm, _1.kdd, _1.fdx, _1.fnm, _1.kdm, _1.fdt]
+DWPT 0 [2021-04-27T11:33:37.719295Z; main]: flushed codec=Lucene90
+DWPT 0 [2021-04-27T11:33:37.719520Z; main]: flushed: segment=_1 ramUsed=218.313 MB newFlushedSize=136.451 MB docs/MB=207,100.604
+IW 0 [2021-04-27T11:33:37.719647Z; main]: create compound file
+DWPT 0 [2021-04-27T11:33:37.888449Z; main]: flush time 12039.476885 msec
+IW 0 [2021-04-27T11:33:37.888653Z; main]: publishFlushedSegment seg-private updates=null
+IW 0 [2021-04-27T11:33:37.888812Z; main]: publishFlushedSegment _1(9.0.0):c28258983:[diagnostics={timestamp=1619523217719, java.version=11.0.11, java.vm.version=11.0.11+9-LTS, lucene.version=9.0.0, source=flush, os.arch=amd64, java.runtime.version=11.0.11+9-LTS, os.version=4.19.57-15.1.al7.x86_64, os=Linux, java.vendor=Red Hat, Inc.}]:[attributes={Lucene90StoredFieldsFormat.mode=BEST_SPEED}] :id=ew3fxhoeonyl9fsl3f5kl7vgm
+BD 0 [2021-04-27T11:33:37.888879Z; main]: finished packet delGen=2 now completedDelGen=2
+IW 0 [2021-04-27T11:33:37.889099Z; main]: publish sets newSegment delGen=2 seg=_1(9.0.0):c28258983:[diagnostics={timestamp=1619523217719, java.version=11.0.11, java.vm.version=11.0.11+9-LTS, lucene.version=9.0.0, source=flush, os.arch=amd64, java.runtime.version=11.0.11+9-LTS, os.version=4.19.57-15.1.al7.x86_64, os=Linux, java.vendor=Red Hat, Inc.}]:[attributes={Lucene90StoredFieldsFormat.mode=BEST_SPEED}] :id=ew3fxhoeonyl9fsl3f5kl7vgm
+IFD 0 [2021-04-27T11:33:37.889523Z; main]: now checkpoint "_0(9.0.0):c32585421:[diagnostics={timestamp=1619523184320, java.version=11.0.11, java.vm.version=11.0.11+9-LTS, lucene.version=9.0.0, source=flush, os.arch=amd64, java.runtime.version=11.0.11+9-LTS, os.version=4.19.57-15.1.al7.x86_64, os=Linux, java.vendor=Red Hat, Inc.}]:[attributes={Lucene90StoredFieldsFormat.mode=BEST_SPEED}] :id=ew3fxhoeonyl9fsl3f5kl7vgk _1(9.0.0):c28258983:[diagnostics={timestamp=1619523217719, java.version=11.0.11, java.vm.version=11.0.11+9-LTS, lucene.version=9.0.0, source=flush, os.arch=amd64, java.runtime.version=11.0.11+9-LTS, os.version=4.19.57-15.1.al7.x86_64, os=Linux, java.vendor=Red Hat, Inc.}]:[attributes={Lucene90StoredFieldsFormat.mode=BEST_SPEED}] :id=ew3fxhoeonyl9fsl3f5kl7vgn" [2 segments ; isCommit = false]
+IFD 0 [2021-04-27T11:33:37.889721Z; main]: 0 msec to checkpoint
+IFD 0 [2021-04-27T11:33:37.889882Z; main]: will delete new file "_1.kdi"
+IFD 0 [2021-04-27T11:33:37.889935Z; main]: will delete new file "_1.fdm"
+IFD 0 [2021-04-27T11:33:37.889970Z; main]: will delete new file "_1.kdd"
+IFD 0 [2021-04-27T11:33:37.890005Z; main]: will delete new file "_1.fdx"
+IFD 0 [2021-04-27T11:33:37.890042Z; main]: will delete new file "_1.fnm"
+IFD 0 [2021-04-27T11:33:37.890085Z; main]: will delete new file "_1.kdm"
+IFD 0 [2021-04-27T11:33:37.890118Z; main]: will delete new file "_1.fdt"
+IFD 0 [2021-04-27T11:33:37.890180Z; main]: delete [_1.kdi, _1.fdm, _1.kdd, _1.fdx, _1.fnm, _1.kdm, _1.fdt]
+IW 0 [2021-04-27T11:33:37.912967Z; main]: now apply all deletes for all segments buffered updates bytesUsed=0 reader pool bytesUsed=0
+BD 0 [2021-04-27T11:33:37.913117Z; main]: waitApply: no deletes to apply
+DW 0 [2021-04-27T11:33:37.915107Z; main]: main finishFullFlush success=true
+IW 0 [2021-04-27T11:33:37.915246Z; main]: startCommit(): start
+IW 0 [2021-04-27T11:33:37.915794Z; main]: startCommit index=_0(9.0.0):c32585421:[diagnostics={timestamp=1619523184320, java.version=11.0.11, java.vm.version=11.0.11+9-LTS, lucene.version=9.0.0, source=flush, os.arch=amd64, java.runtime.version=11.0.11+9-LTS, os.version=4.19.57-15.1.al7.x86_64, os=Linux, java.vendor=Red Hat, Inc.}]:[attributes={Lucene90StoredFieldsFormat.mode=BEST_SPEED}] :id=ew3fxhoeonyl9fsl3f5kl7vgk _1(9.0.0):c28258983:[diagnostics={timestamp=1619523217719, java.version=11.0.11, java.vm.version=11.0.11+9-LTS, lucene.version=9.0.0, source=flush, os.arch=amd64, java.runtime.version=11.0.11+9-LTS, os.version=4.19.57-15.1.al7.x86_64, os=Linux, java.vendor=Red Hat, Inc.}]:[attributes={Lucene90StoredFieldsFormat.mode=BEST_SPEED}] :id=ew3fxhoeonyl9fsl3f5kl7vgn changeCount=6
+IW 0 [2021-04-27T11:33:38.016562Z; main]: startCommit: wrote pending segments file "pending_segments_1"
+IW 0 [2021-04-27T11:33:38.182564Z; main]: done all syncs: [_1.cfs, _0.cfe, _0.si, _1.cfe, _1.si, _0.cfs]
+IW 0 [2021-04-27T11:33:38.183162Z; main]: commit: pendingCommit != null
+IW 0 [2021-04-27T11:33:38.184726Z; main]: commit: done writing segments file "segments_1"
+IFD 0 [2021-04-27T11:33:38.185089Z; main]: now checkpoint "_0(9.0.0):c32585421:[diagnostics={timestamp=1619523184320, java.version=11.0.11, java.vm.version=11.0.11+9-LTS, lucene.version=9.0.0, source=flush, os.arch=amd64, java.runtime.version=11.0.11+9-LTS, os.version=4.19.57-15.1.al7.x86_64, os=Linux, java.vendor=Red Hat, Inc.}]:[attributes={Lucene90StoredFieldsFormat.mode=BEST_SPEED}] :id=ew3fxhoeonyl9fsl3f5kl7vgk _1(9.0.0):c28258983:[diagnostics={timestamp=1619523217719, java.version=11.0.11, java.vm.version=11.0.11+9-LTS, lucene.version=9.0.0, source=flush, os.arch=amd64, java.runtime.version=11.0.11+9-LTS, os.version=4.19.57-15.1.al7.x86_64, os=Linux, java.vendor=Red Hat, Inc.}]:[attributes={Lucene90StoredFieldsFormat.mode=BEST_SPEED}] :id=ew3fxhoeonyl9fsl3f5kl7vgn" [2 segments ; isCommit = true]
+IFD 0 [2021-04-27T11:33:38.185896Z; main]: 1 msec to checkpoint
+IW 0 [2021-04-27T11:33:38.186218Z; main]: commit: took 12343.2 msec
+IW 0 [2021-04-27T11:33:38.186263Z; main]: commit: done
+MP 0 [2021-04-27T11:33:38.186338Z; main]: findMerges: 2 segments
+MP 0 [2021-04-27T11:33:38.186704Z; main]: seg=_0(9.0.0):c32585421:[diagnostics={timestamp=1619523184320, java.version=11.0.11, java.vm.version=11.0.11+9-LTS, lucene.version=9.0.0, source=flush, os.arch=amd64, java.runtime.version=11.0.11+9-LTS, os.version=4.19.57-15.1.al7.x86_64, os=Linux, java.vendor=Red Hat, Inc.}]:[attributes={Lucene90StoredFieldsFormat.mode=BEST_SPEED}] :id=ew3fxhoeonyl9fsl3f5kl7vgk level=7.5130234 size=155.869 MB
+MP 0 [2021-04-27T11:33:38.187077Z; main]: seg=_1(9.0.0):c28258983:[diagnostics={timestamp=1619523217719, java.version=11.0.11, java.vm.version=11.0.11+9-LTS, lucene.version=9.0.0, source=flush, os.arch=amd64, java.runtime.version=11.0.11+9-LTS, os.version=4.19.57-15.1.al7.x86_64, os=Linux, java.vendor=Red Hat, Inc.}]:[attributes={Lucene90StoredFieldsFormat.mode=BEST_SPEED}] :id=ew3fxhoeonyl9fsl3f5kl7vgn level=7.451156 size=136.450 MB
+MP 0 [2021-04-27T11:33:38.187150Z; main]:   level 6.7630234 to 7.5130234: 2 segments
+IW 0 [2021-04-27T11:33:38.187200Z; main]: now flush at close
+IW 0 [2021-04-27T11:33:38.188108Z; main]:   start flush: applyAllDeletes=true
+IW 0 [2021-04-27T11:33:38.188500Z; main]:   index before flush _0(9.0.0):c32585421:[diagnostics={timestamp=1619523184320, java.version=11.0.11, java.vm.version=11.0.11+9-LTS, lucene.version=9.0.0, source=flush, os.arch=amd64, java.runtime.version=11.0.11+9-LTS, os.version=4.19.57-15.1.al7.x86_64, os=Linux, java.vendor=Red Hat, Inc.}]:[attributes={Lucene90StoredFieldsFormat.mode=BEST_SPEED}] :id=ew3fxhoeonyl9fsl3f5kl7vgk _1(9.0.0):c28258983:[diagnostics={timestamp=1619523217719, java.version=11.0.11, java.vm.version=11.0.11+9-LTS, lucene.version=9.0.0, source=flush, os.arch=amd64, java.runtime.version=11.0.11+9-LTS, os.version=4.19.57-15.1.al7.x86_64, os=Linux, java.vendor=Red Hat, Inc.}]:[attributes={Lucene90StoredFieldsFormat.mode=BEST_SPEED}] :id=ew3fxhoeonyl9fsl3f5kl7vgn
+DW 0 [2021-04-27T11:33:38.188560Z; main]: startFullFlush
+DW 0 [2021-04-27T11:33:38.188702Z; main]: main finishFullFlush success=true
+IW 0 [2021-04-27T11:33:38.188768Z; main]: now apply all deletes for all segments buffered updates bytesUsed=0 reader pool bytesUsed=0
+BD 0 [2021-04-27T11:33:38.188810Z; main]: waitApply: no deletes to apply
+IW 0 [2021-04-27T11:33:38.188883Z; main]: waitForMerges
+IW 0 [2021-04-27T11:33:38.188919Z; main]: waitForMerges done
+IW 0 [2021-04-27T11:33:38.188951Z; main]: commit: start
+IW 0 [2021-04-27T11:33:38.188988Z; main]: commit: enter lock
+IW 0 [2021-04-27T11:33:38.189017Z; main]: commit: now prepare
+IW 0 [2021-04-27T11:33:38.189047Z; main]: prepareCommit: flush
+IW 0 [2021-04-27T11:33:38.189243Z; main]:   index before flush _0(9.0.0):c32585421:[diagnostics={timestamp=1619523184320, java.version=11.0.11, java.vm.version=11.0.11+9-LTS, lucene.version=9.0.0, source=flush, os.arch=amd64, java.runtime.version=11.0.11+9-LTS, os.version=4.19.57-15.1.al7.x86_64, os=Linux, java.vendor=Red Hat, Inc.}]:[attributes={Lucene90StoredFieldsFormat.mode=BEST_SPEED}] :id=ew3fxhoeonyl9fsl3f5kl7vgk _1(9.0.0):c28258983:[diagnostics={timestamp=1619523217719, java.version=11.0.11, java.vm.version=11.0.11+9-LTS, lucene.version=9.0.0, source=flush, os.arch=amd64, java.runtime.version=11.0.11+9-LTS, os.version=4.19.57-15.1.al7.x86_64, os=Linux, java.vendor=Red Hat, Inc.}]:[attributes={Lucene90StoredFieldsFormat.mode=BEST_SPEED}] :id=ew3fxhoeonyl9fsl3f5kl7vgn
+DW 0 [2021-04-27T11:33:38.189288Z; main]: startFullFlush
+IW 0 [2021-04-27T11:33:38.189421Z; main]: now apply all deletes for all segments buffered updates bytesUsed=0 reader pool bytesUsed=0
+BD 0 [2021-04-27T11:33:38.189464Z; main]: waitApply: no deletes to apply
+DW 0 [2021-04-27T11:33:38.189552Z; main]: main finishFullFlush success=true
+IW 0 [2021-04-27T11:33:38.189618Z; main]: startCommit(): start
+IW 0 [2021-04-27T11:33:38.189654Z; main]:   skip startCommit(): no changes pending
+IW 0 [2021-04-27T11:33:38.189697Z; main]: commit: pendingCommit == null; skip
+IW 0 [2021-04-27T11:33:38.189861Z; main]: commit: took 0.7 msec
+IW 0 [2021-04-27T11:33:38.189898Z; main]: commit: done
+IW 0 [2021-04-27T11:33:38.189940Z; main]: rollback
+IW 0 [2021-04-27T11:33:38.192462Z; main]: all running merges have aborted
+IW 0 [2021-04-27T11:33:38.192528Z; main]: rollback: done finish merges
+DW 0 [2021-04-27T11:33:38.192611Z; main]: abort
+DW 0 [2021-04-27T11:33:38.193041Z; main]: done abort success=true
+IW 0 [2021-04-27T11:33:38.193484Z; main]: rollback: infos=_0(9.0.0):c32585421:[diagnostics={timestamp=1619523184320, java.version=11.0.11, java.vm.version=11.0.11+9-LTS, lucene.version=9.0.0, source=flush, os.arch=amd64, java.runtime.version=11.0.11+9-LTS, os.version=4.19.57-15.1.al7.x86_64, os=Linux, java.vendor=Red Hat, Inc.}]:[attributes={Lucene90StoredFieldsFormat.mode=BEST_SPEED}] :id=ew3fxhoeonyl9fsl3f5kl7vgk _1(9.0.0):c28258983:[diagnostics={timestamp=1619523217719, java.version=11.0.11, java.vm.version=11.0.11+9-LTS, lucene.version=9.0.0, source=flush, os.arch=amd64, java.runtime.version=11.0.11+9-LTS, os.version=4.19.57-15.1.al7.x86_64, os=Linux, java.vendor=Red Hat, Inc.}]:[attributes={Lucene90StoredFieldsFormat.mode=BEST_SPEED}] :id=ew3fxhoeonyl9fsl3f5kl7vgn
+IFD 0 [2021-04-27T11:33:38.193756Z; main]: now checkpoint "_0(9.0.0):c32585421:[diagnostics={timestamp=1619523184320, java.version=11.0.11, java.vm.version=11.0.11+9-LTS, lucene.version=9.0.0, source=flush, os.arch=amd64, java.runtime.version=11.0.11+9-LTS, os.version=4.19.57-15.1.al7.x86_64, os=Linux, java.vendor=Red Hat, Inc.}]:[attributes={Lucene90StoredFieldsFormat.mode=BEST_SPEED}] :id=ew3fxhoeonyl9fsl3f5kl7vgk _1(9.0.0):c28258983:[diagnostics={timestamp=1619523217719, java.version=11.0.11, java.vm.version=11.0.11+9-LTS, lucene.version=9.0.0, source=flush, os.arch=amd64, java.runtime.version=11.0.11+9-LTS, os.version=4.19.57-15.1.al7.x86_64, os=Linux, java.vendor=Red Hat, Inc.}]:[attributes={Lucene90StoredFieldsFormat.mode=BEST_SPEED}] :id=ew3fxhoeonyl9fsl3f5kl7vgn" [2 segments ; isCommit = false]
+IFD 0 [2021-04-27T11:33:38.193877Z; main]: 0 msec to checkpoint
+72.49147722 sec to build index

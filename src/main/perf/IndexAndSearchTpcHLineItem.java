@@ -53,7 +53,7 @@ import org.apache.lucene.util.PrintStreamInfoStream;
 
 // javac -cp build/core/classes/java:build/sandbox/classes/java /l/util/src/main/perf/IndexAndSearchOpenStreetMaps1D.java; java -cp build/core/classes/java:build/sandbox/classes/java:/l/util/src/main/perf IndexAndSearchOpenStreetMaps1D
 
-public class IndexAndSearchOpenStreetMaps1D {
+public class IndexAndSearchTpcHLineItem {
 
   private static boolean USE_NF;
 
@@ -66,10 +66,10 @@ public class IndexAndSearchOpenStreetMaps1D {
         .onUnmappableCharacter(CodingErrorAction.REPORT);
 
     int BUFFER_SIZE = 1 << 16;     // 64K
-    InputStream is = Files.newInputStream(Paths.get("/disk1/lucene/latlon.subsetPlusAllLondon.txt"));
+    InputStream is = Files.newInputStream(Paths.get("/disk1/tpch/data/tpch10g/lineitem.tbl"));
     BufferedReader reader = new BufferedReader(new InputStreamReader(is, decoder), BUFFER_SIZE);
 
-    Directory dir = FSDirectory.open(Paths.get("/disk1/lucene/bkdtest1d" + (USE_NF ? "_nf" : "")));
+    Directory dir = FSDirectory.open(Paths.get("/disk1/lucene/bkd-tpch" + (USE_NF ? "_nf" : "")));
 
     IndexWriterConfig iwc = new IndexWriterConfig();
     iwc.setOpenMode(IndexWriterConfig.OpenMode.CREATE);
@@ -89,18 +89,23 @@ public class IndexAndSearchOpenStreetMaps1D {
         break;
       }
 
-      String[] parts = line.split(",");
+      String[] parts = line.split("\\|");
       //long id = Long.parseLong(parts[0]);
-      int lat = (int) (1000000. * Double.parseDouble(parts[1]));
+      //int lat = (int) (1000000. * Double.parseDouble(parts[1]));
       //int lon = (int) (1000000. * Double.parseDouble(parts[2]));
       Document doc = new Document();
       //if (USE_NF) {
       //  doc.add(new LegacyIntField("latnum", lat, Field.Store.NO));
         //doc.add(new LongField("lonnum", lon, Field.Store.NO));
       //} else {
+      //  doc.add(new IntPoint("lat", lat));
         //doc.add(new SortedNumericDocValuesField("lon", lon));
      // }
-      doc.add(new IntPoint("lat", lat));
+      doc.add(new IntPoint("ORDERKEY", Integer.parseInt(parts[0])));
+      doc.add(new IntPoint("PARTKEY", Integer.parseInt(parts[1])));
+      doc.add(new IntPoint("SUPPKEY", Integer.parseInt(parts[2])));
+      doc.add(new IntPoint("LINENUMBER", Integer.parseInt(parts[3])));
+      doc.add(new IntPoint("QUANTITY", Integer.parseInt(parts[4])));
       w.addDocument(doc);
       count++;
       if (count % 1000000 == 0) {
