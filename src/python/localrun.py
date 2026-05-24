@@ -50,18 +50,13 @@ if __name__ == "__main__":
     waitForCommit=True,
     addDVFields=True,
     useCMS=True,
-    mergePolicy="TieredMergePolicy",
-    facets=(
-      ("taxonomy:Date", "Date"),
-      ("taxonomy:Month", "Month"),
-      ("taxonomy:DayOfYear", "DayOfYear"),
-      ("sortedset:Date", "Date"),
-      ("sortedset:Month", "Month"),
-      ("sortedset:DayOfYear", "DayOfYear"),
-      ("taxonomy:RandomLabel", "RandomLabel"),
-      ("sortedset:RandomLabel", "RandomLabel"),
-    ),
+    grouping=False,
+    verbose=False,
+    mergePolicy="TieredMergePolicy"
   )
+
+  comp.addNotTaskPattern(".*Facet.*")
+  comp.addNotTaskPattern(".*range:dayOfYear.*")
 
   # create a competitor named baseline with sources in the ../trunk folder
   comp.competitor("baseline", args.baseline, index=index, searchConcurrency=args.searchConcurrency)
@@ -83,18 +78,15 @@ if __name__ == "__main__":
       waitForMerges=True,
       waitForCommit=True,
       addDVFields=True,
-      extraNamePart="candidate",
-      facets=(
-        ("taxonomy:Date", "Date"),
-        ("taxonomy:Month", "Month"),
-        ("taxonomy:DayOfYear", "DayOfYear"),
-        ("sortedset:Date", "Date"),
-        ("sortedset:Month", "Month"),
-        ("sortedset:DayOfYear", "DayOfYear"),
-        ("taxonomy:RandomLabel", "RandomLabel"),
-        ("sortedset:RandomLabel", "RandomLabel"),
-      ),
+      useCMS=True,
+      grouping=False,
+      verbose=False,
+      mergePolicy="TieredMergePolicy"
     )
+
+  comp.addNotTaskPattern(".*Facet.*")
+  comp.addNotTaskPattern(".*range:dayOfYear.*")
+
   comp.competitor("my_modified_version", args.candidate, index=candidate_index, searchConcurrency=args.searchConcurrency)
 
   # start the benchmark - this can take long depending on your index and machines
