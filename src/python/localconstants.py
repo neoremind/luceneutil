@@ -2,6 +2,13 @@
 BASE_DIR = '/path/to/workspace'
 BENCH_BASE_DIR = '/path/to/workspace/fork_luceneutil'
 
+# Use multiple indexing threads (default: 1)
+INDEX_NUM_THREADS = 1
+
+# Use the binary line docs format for faster document parsing.
+# Generate it with: python3 -u src/python/buildBinaryLineDocs.py <input.txt> <output.bin>
+WIKI_MEDIUM_DOCS_LINE_FILE = '%s/data/enwiki-20120502-lines-1k-fixed-utf8-with-random-label.bin' % BASE_DIR
+
 import os
 os.environ["JAVA_HOME"] = "/path/to/java_home"
 os.environ["PATH"] = os.environ["JAVA_HOME"] + "/bin:" + os.environ.get("PATH", "")
