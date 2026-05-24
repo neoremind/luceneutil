@@ -148,7 +148,7 @@ NOISY = True
 
 # test parameters. This script will run KnnGraphTester on every combination of these parameters
 PARAMS = {
-  "ndoc": (500_000,),
+  "ndoc": (50_000,),
   "maxConn": (64,),
   "beamWidthIndex": (250,),
   "fanout": (100,),
@@ -157,18 +157,21 @@ PARAMS = {
   "numSearchThread": (4,),
   "encoding": ("float32",),
   "metric": ("dot_product",),
-  "quantizeBits": (1, 2, 4),
-  "overSample": (
-    1,
-    2,
-    5,
-  ),
+  # "quantizeBits": (1, 2, 4),
+  "quantizeBits": (32,),
+#   "overSample": (
+#     1,
+#     2,
+#     5,
+#   ),
+  "overSample": (1,),
   "topK": (100,),
   "quantizeCompress": (True,),
   "forceMerge": (True,),
-  "nquery": (10000,),
+  "nquery": (10,),
   "rerank": (True, False),
-  "rerankQuantizeBits": (32, 8, 4),
+#   "rerankQuantizeBits": (32, 8, 4),
+  "rerankQuantizeBits": (32,),
 }
 
 
