@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -54,11 +55,16 @@ import org.apache.lucene.index.VectorSimilarityFunction;
 import org.apache.lucene.misc.index.BPReorderingMergePolicy;
 import org.apache.lucene.misc.index.BpVectorReorderer;
 import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.store.FilterDirectory;
+import org.apache.lucene.store.IOContext;
+import org.apache.lucene.store.IndexOutput;
 import org.apache.lucene.util.Bits;
 import org.apache.lucene.util.PrintStreamInfoStream;
 
 import static knn.KnnGraphTester.DOCTYPE_CHILD;
 import static knn.KnnGraphTester.DOCTYPE_PARENT;
+
+import perf.StatsIndexOutput;
 
 public class KnnIndexer implements FormatterLogger {
 
@@ -153,8 +159,27 @@ public class KnnIndexer implements FormatterLogger {
     }
 
     long startNS = System.nanoTime(), elapsedNS;
-    try (FSDirectory dir = FSDirectory.open(indexPath);
-         IndexWriter iw = new IndexWriter(dir, iwc);
+    // --- IO STATS: wrap directory to collect write stats ---
+    Map<String, List<StatsIndexOutput>> ioStatsByExt = new TreeMap<>();
+    try (FSDirectory fsDir = FSDirectory.open(indexPath)) {
+      FilterDirectory dir = new FilterDirectory(fsDir) {
+        @Override
+        public IndexOutput createOutput(String name, IOContext context) throws IOException {
+          IndexOutput raw = super.createOutput(name, context);
+          StatsIndexOutput wrapped = new StatsIndexOutput(raw);
+          ioStatsByExt.computeIfAbsent(name.substring(name.lastIndexOf('.') + 1), k -> new ArrayList<>()).add(wrapped);
+          return wrapped;
+        }
+        @Override
+        public IndexOutput createTempOutput(String prefix, String suffix, IOContext context) throws IOException {
+          IndexOutput raw = super.createTempOutput(prefix, suffix, context);
+          StatsIndexOutput wrapped = new StatsIndexOutput(raw);
+          ioStatsByExt.computeIfAbsent(suffix, k -> new ArrayList<>()).add(wrapped);
+          return wrapped;
+        }
+      };
+      // --- end IO STATS setup ---
+    try (IndexWriter iw = new IndexWriter(dir, iwc);
          FileChannel in = FileChannel.open(docsPath)) {
       long docsPathSizeInBytes = in.size();
       if (docsPathSizeInBytes % (dim * vectorEncoding.byteSize) != 0) {
@@ -267,7 +292,25 @@ public class KnnIndexer implements FormatterLogger {
       elapsedNS = System.nanoTime() - startNS;
 
       waitForMergesWithStatus(ttmp, tcms, this);
-    }
+    } // end inner try (IndexWriter + FileChannel)
+
+      // --- IO STATS: print collected write stats ---
+      StatsIndexOutput.WriteStats globalStats = new StatsIndexOutput.WriteStats();
+      for (Map.Entry<String, List<StatsIndexOutput>> entry : ioStatsByExt.entrySet()) {
+        StatsIndexOutput.WriteStats merged = new StatsIndexOutput.WriteStats();
+        for (StatsIndexOutput out : entry.getValue()) merged.merge(out.getStats());
+        if (merged.totalCalls() > 0) {
+          System.out.printf("%n--- IO Stats .%s (%d files) ---%n", entry.getKey(), entry.getValue().size());
+          System.out.println(merged);
+          globalStats.merge(merged);
+        }
+      }
+      System.out.println("\n" + "=".repeat(80));
+      System.out.println("IO STATS GLOBAL AGGREGATE");
+      System.out.println("=".repeat(80));
+      System.out.println(globalStats);
+      // --- end IO STATS print ---
+    } // end outer try (FSDirectory)
     log("Indexed %d docs in %d seconds\n", numDocs, TimeUnit.NANOSECONDS.toSeconds(elapsedNS));
     return (int) TimeUnit.NANOSECONDS.toMillis(elapsedNS);
   }

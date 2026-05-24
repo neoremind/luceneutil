@@ -36,8 +36,10 @@ import java.util.Deque;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -110,6 +112,9 @@ import org.apache.lucene.search.join.ToParentBlockJoinQuery;
 import org.apache.lucene.search.knn.KnnCollectorManager;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.store.FilterDirectory;
+import org.apache.lucene.store.IOContext;
+import org.apache.lucene.store.IndexOutput;
 import org.apache.lucene.store.MMapDirectory;
 import org.apache.lucene.util.ArrayUtil;
 import org.apache.lucene.util.Bits;
@@ -125,6 +130,7 @@ import org.apache.lucene.search.TopKnnCollector;
 
 import org.apache.lucene.util.quantization.QuantizedByteVectorValues.ScalarEncoding;
 import perf.SearchPerfTest.ThreadDetails;
+import perf.StatsIndexOutput;
 import static org.apache.lucene.search.DocIdSetIterator.NO_MORE_DOCS;
 //TODO Lucene may make these unavailable, we should pull in this from hppc directly
 
@@ -1097,10 +1103,46 @@ public class KnnGraphTester implements FormatterLogger {
     KnnIndexer.TrackingTieredMergePolicy ttmp = new KnnIndexer.TrackingTieredMergePolicy();
     iwc.setMergePolicy(ttmp);
     log("Force merge index in " + indexPath + "\n");
+    // --- IO STATS: wrap directory to collect write stats during force merge ---
+    Map<String, List<StatsIndexOutput>> ioStatsByExt = new TreeMap<>();
     long startNS = System.nanoTime();
-    try (IndexWriter iw = new IndexWriter(FSDirectory.open(indexPath), iwc)) {
-      iw.forceMerge(1, false);
-      KnnIndexer.waitForMergesWithStatus(ttmp, tcms, this);
+    try (FSDirectory fsDir = FSDirectory.open(indexPath)) {
+      FilterDirectory dir = new FilterDirectory(fsDir) {
+        @Override
+        public IndexOutput createOutput(String name, IOContext context) throws IOException {
+          IndexOutput raw = super.createOutput(name, context);
+          StatsIndexOutput wrapped = new StatsIndexOutput(raw);
+          ioStatsByExt.computeIfAbsent(name.substring(name.lastIndexOf('.') + 1), k -> new ArrayList<>()).add(wrapped);
+          return wrapped;
+        }
+        @Override
+        public IndexOutput createTempOutput(String prefix, String suffix, IOContext context) throws IOException {
+          IndexOutput raw = super.createTempOutput(prefix, suffix, context);
+          StatsIndexOutput wrapped = new StatsIndexOutput(raw);
+          ioStatsByExt.computeIfAbsent(suffix, k -> new ArrayList<>()).add(wrapped);
+          return wrapped;
+        }
+      };
+      try (IndexWriter iw = new IndexWriter(dir, iwc)) {
+        iw.forceMerge(1, false);
+        KnnIndexer.waitForMergesWithStatus(ttmp, tcms, this);
+      }
+      // --- IO STATS: print force merge write stats ---
+      StatsIndexOutput.WriteStats globalStats = new StatsIndexOutput.WriteStats();
+      for (Map.Entry<String, List<StatsIndexOutput>> entry : ioStatsByExt.entrySet()) {
+        StatsIndexOutput.WriteStats merged = new StatsIndexOutput.WriteStats();
+        for (StatsIndexOutput out : entry.getValue()) merged.merge(out.getStats());
+        if (merged.totalCalls() > 0) {
+          System.out.printf("%n--- Force Merge IO Stats .%s (%d files) ---%n", entry.getKey(), entry.getValue().size());
+          System.out.println(merged);
+          globalStats.merge(merged);
+        }
+      }
+      System.out.println("\n" + "=".repeat(80));
+      System.out.println("FORCE MERGE IO STATS GLOBAL AGGREGATE");
+      System.out.println("=".repeat(80));
+      System.out.println(globalStats);
+      // --- end IO STATS ---
     }
     long endNS = System.nanoTime();
     double elapsedSec = nsToSec(endNS - startNS);
@@ -1250,7 +1292,7 @@ public class KnnGraphTester implements FormatterLogger {
                 result = doByteVectorQuery(searcher, target, searchType, oversampledTopK, oversampledFanout, resultSimilarity, decay, filterStrategy, filterQuery, oversampledTopK);
               } else {
                 float[] target = targetReader.next();
-                result = doFloatVectorQuery(searcher, target, searchType, oversampledTopK, oversampledFanout, resultSimilarity, decay, filterStrategy, filterQuery, parentJoin, searcher.getIndexReader().numDocs(), rerank, rerankQuantizeBits, this.topK);
+                result = doFloatVectorQuery(searcher, target, searchType, oversampledTopK, oversampledFanout, resultSimilarity, decay, filterStrategy, filterQuery, parentJoin, searcher.getIndexReader().numDocs(), rerank, this.topK);
               }
               resultSizes[i] = Math.max(1, result.topDocs.scoreDocs.length);
             }
@@ -1265,7 +1307,7 @@ public class KnnGraphTester implements FormatterLogger {
               results[i] = doByteVectorQuery(searcher, target, searchType, oversampledTopK, oversampledFanout, resultSimilarity, decay, filterStrategy, filterQuery, resultSizes[i]);
             } else {
               float[] target = targetReader.next();
-              results[i] = doFloatVectorQuery(searcher, target, searchType, oversampledTopK, oversampledFanout, resultSimilarity, decay, filterStrategy, filterQuery, parentJoin, resultSizes[i], rerank, rerankQuantizeBits, this.topK);
+              results[i] = doFloatVectorQuery(searcher, target, searchType, oversampledTopK, oversampledFanout, resultSimilarity, decay, filterStrategy, filterQuery, parentJoin, resultSizes[i], rerank, this.topK);
             }
           }
           ThreadDetails endThreadDetails = new ThreadDetails();
@@ -1488,7 +1530,7 @@ public class KnnGraphTester implements FormatterLogger {
   }
 
   private static Result doFloatVectorQuery(
-    IndexSearcher searcher, float[] vector, SearchType searchType, int k, int fanout, float resultSimilarity, float decay, FilterStrategy filterStrategy, Query filter, boolean isParentJoinQuery, int resultSize, boolean rerank, int rerankQuantizeBits, int finalTopK)
+    IndexSearcher searcher, float[] vector, SearchType searchType, int k, int fanout, float resultSimilarity, float decay, FilterStrategy filterStrategy, Query filter, boolean isParentJoinQuery, int resultSize, boolean rerank, int finalTopK)
     throws IOException {
 
     Query queryTimeFilter = null;
@@ -1522,37 +1564,7 @@ public class KnnGraphTester implements FormatterLogger {
       query = (Query) vectorQuery;
     }
     if (rerank && searchType == SearchType.KNN) {
-      // Bug fix: RescoreTopNQuery.createFullPrecisionRescorerQuery builds a
-      // FullPrecisionFloatVectorSimilarityValuesSource which calls FloatVectorValues.rescorer(),
-      // and for ScalarQuantizedVectorValues that delegates to the raw float32 vectors -- so any
-      // 2/4/7/8-bit rerank field was silently being rescored against float32, defeating the
-      // whole point of the quantized rerank field. We work around it by branching: when
-      // rerankQuantizeBits == 32 we keep Lucene's full-precision path; otherwise we use our own
-      // DoubleValuesSource that calls FloatVectorValues.scorer() so the rerank pass actually
-      // reads the quantized vectors of the rerank field.
-      //
-      // TODO: fix this cleanly upstream in Lucene -- e.g. give RescoreTopNQuery a factory that
-      // builds a quantized rescorer (calling .scorer() instead of .rescorer()), or add a flag
-      // on FullPrecisionFloatVectorSimilarityValuesSource to pick the path. The name
-      // "FullPrecision" should mean what it says.
-      //
-      // TODO: separately, the quantized rerank field also double-stores full-precision float32
-      // vectors today (Lucene104ScalarQuantizedVectorsFormat keeps raw vectors alongside the
-      // quantized ones). Combined with the primary KNN field this means we index float32
-      // vectors twice on disk -- substantial cost for big indices. Upstream PR
-      // https://github.com/apache/lucene/pull/15630 ("Added support for writing empty
-      // full-precision vector files", tracking issue
-      // https://github.com/apache/lucene/issues/13158) adds the option to write empty raw-vector
-      // files; once that lands and we adopt it, we can drop the redundant float32 copy from the
-      // rerank field.
-      if (rerankQuantizeBits == 32) {
-        query = RescoreTopNQuery.createFullPrecisionRescorerQuery(query, vector, KNN_FIELD_RERANK, finalTopK);
-      } else {
-        query = new RescoreTopNQuery(
-          query,
-          new QuantizedVectorSimilarityValuesSource(vector, KNN_FIELD_RERANK),
-          finalTopK);
-      }
+      query = RescoreTopNQuery.createFullPrecisionRescorerQuery(query, vector, KNN_FIELD_RERANK, finalTopK);
     }
     TopDocs docs = searcher.search(query, resultSize);
     return new Result(docs, vectorQuery.totalVisitedVectorCount(), 0);

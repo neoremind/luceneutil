@@ -225,7 +225,25 @@ public final class Indexer {
     final Directory dir;
     OpenDirectory od = OpenDirectory.get(dirImpl);
 
-    dir = od.open(Paths.get(dirPath));
+    // --- IO STATS: uncomment the block below to collect write stats ---
+    final Map<String, java.util.List<StatsIndexOutput>> ioStatsByExt = new java.util.TreeMap<>();
+    dir = new org.apache.lucene.store.FilterDirectory(od.open(Paths.get(dirPath))) {
+      @Override
+      public org.apache.lucene.store.IndexOutput createOutput(String name, org.apache.lucene.store.IOContext context) throws IOException {
+        org.apache.lucene.store.IndexOutput raw = super.createOutput(name, context);
+        StatsIndexOutput wrapped = new StatsIndexOutput(raw);
+        ioStatsByExt.computeIfAbsent(name.substring(name.lastIndexOf('.') + 1), k -> new java.util.ArrayList<>()).add(wrapped);
+        return wrapped;
+      }
+      @Override
+      public org.apache.lucene.store.IndexOutput createTempOutput(String prefix, String suffix, org.apache.lucene.store.IOContext context) throws IOException {
+        org.apache.lucene.store.IndexOutput raw = super.createTempOutput(prefix, suffix, context);
+        StatsIndexOutput wrapped = new StatsIndexOutput(raw);
+        ioStatsByExt.computeIfAbsent(suffix, k -> new java.util.ArrayList<>()).add(wrapped);
+        return wrapped;
+      }
+    };
+    // --- end IO STATS setup ---
 
     final String analyzer = args.getString("-analyzer");
     final Analyzer a;
@@ -747,6 +765,23 @@ public final class Indexer {
            on a 10000 doc, 555 arrangement */
         System.out.println("\nIndexer: rearrange done (took " + (rearrangeEndMSec-rearrangeStartMSec) + " msec)");
       }
+
+      // --- IO STATS: print collected write stats ---
+      StatsIndexOutput.WriteStats globalStats = new StatsIndexOutput.WriteStats();
+      for (Map.Entry<String, java.util.List<StatsIndexOutput>> entry : ioStatsByExt.entrySet()) {
+        StatsIndexOutput.WriteStats merged = new StatsIndexOutput.WriteStats();
+        for (StatsIndexOutput out : entry.getValue()) merged.merge(out.getStats());
+        if (merged.totalCalls() > 0) {
+          System.out.printf("%n--- IO Stats .%s (%d files) ---%n", entry.getKey(), entry.getValue().size());
+          System.out.println(merged);
+          globalStats.merge(merged);
+        }
+      }
+      System.out.println("\n" + "=".repeat(80));
+      System.out.println("IO STATS GLOBAL AGGREGATE");
+      System.out.println("=".repeat(80));
+      System.out.println(globalStats);
+      // --- end IO STATS print ---
 
       dir.close();
       final long tFinal = System.currentTimeMillis();
